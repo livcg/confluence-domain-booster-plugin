@@ -1,0 +1,192 @@
+#requireResource("confluence.web.resources:jquery")
+#requireResource("com.bugsio.confluence.plugins.domain-booster:domain-booster-config-resources")
+
+<html>
+	<head>
+		<title>$action.getText("domain-booster.site.title")</title>
+		<content tag="selectedWebItem">domain-booster-config</content>
+		<meta name="decorator" content="atl.admin"/>
+	</head>
+	<body>
+		#requireResource("confluence.web.resources:aui-forms")
+		
+        #parse ( "/template/includes/actionmessages.vm" )
+        
+        #parse ( "/template/includes/actionerrors.vm" )
+
+        <form method="POST" class="aui long-label" name="domainBoosterEditSite" action="${req.contextPath}/admin/plugins/domain-booster/updatesite.action">
+        	#form_xsrfToken
+        	<div class="hidden parameters">
+        		<input type="hidden" name="editHost" value="$generalUtil.htmlEncode( $action.editHost )" />
+        		<input type="hidden" name="editHostForm" value="true" />
+    		</div>
+        	
+			#if($action.newSiteMode)
+				<h2>$action.getText("domain-booster.config.newSite.heading")</h2>
+			#else
+				<h2>$action.getText("domain-booster.config.site.heading") $action.editHost</h2>
+			#end
+			<p>$action.getText("domain-booster.config.site.description")</p>
+
+            
+            #tag( "TextField" "label='domain-booster.config.site.hostName.label'" "name='hostName'" "value=hostName" "theme='aui'")
+            <div class="description description-textbox">
+            	$action.getText("domain-booster.config.site.hostName.description")
+            </div>
+        	
+            #tag( "TextField" "label='domain-booster.config.site.defaultSpace.label'" "name='defaultSpace'" "value=defaultSpace" "theme='aui'")
+            <div class="description description-textbox">
+                $action.getText("domain-booster.config.site.defaultSpace.description")
+            </div>
+        	
+            #tag( "Textarea" "label='domain-booster.config.site.spaces.label'" "name='spaces'" "rows=5" "cols=40"  "theme='aui'")
+            <div class="description description-textbox">
+            	$action.getText("domain-booster.config.site.spaces.description")
+            </div>
+        	
+            #tag( "Textarea" "label='domain-booster.config.site.aliases.label'" "name='aliases'" "rows=3" "cols=50"  "theme='aui'")
+            <div class="description description-textbox">
+            	$action.getText("domain-booster.config.site.aliases.description")
+            </div>
+        	
+            #tag( "Textarea" "label='domain-booster.config.site.footer.label'" "name='siteFooter'" "rows=3" "cols=50"  "theme='aui'")
+            <div class="description description-textbox">
+            	$action.getText("domain-booster.config.site.footer.description")
+            </div>
+        	
+        	<h2>Options</h2>
+        	
+            #tag( "Component" "label='domain-booster.config.site.knownSpaceForwardAllowed.label'" "name='knownSpaceForwardAllowed'" "theme='aui'" "value=knownSpaceForwardAllowed" "template='onofflist.vm'")
+            <div class="description description-checkbox">
+            	$action.getText("domain-booster.config.site.knownSpaceForwardAllowed.description")
+            </div>
+
+            #tag( "Component" "label='domain-booster.config.site.unknownSpaceHandleAllowed.label'" "name='unknownSpaceHandleAllowed'" "theme='aui'" "value=unknownSpaceHandleAllowed" "template='onofflist.vm'")
+            <div class="description description-checkbox">
+            	$action.getText("domain-booster.config.site.unknownSpaceHandleAllowed.description")
+            </div>
+
+            #tag( "Component" "label='domain-booster.config.site.useGlobalAnonForbiddenPaths.label'" "name='useGlobalAnonForbiddenPaths'" "theme='aui'" "value=useGlobalAnonForbiddenPaths" "template='onofflist.vm'")
+            <div class="description description-checkbox">
+            	$action.getText("domain-booster.config.site.useGlobalAnonForbiddenPaths.description")
+            </div>
+
+            #tag( "Component" "label='domain-booster.config.site.anonAllowedUserProfileAccess.label'" "name='anonAllowedUserProfileAccess'" "theme='aui'" "value=anonAllowedUserProfileAccess" "template='onofflist.vm'")
+            <div class="description description-checkbox">
+            	$action.getText("domain-booster.config.site.anonAllowedUserProfileAccess.description")
+            </div>
+
+			<h2>Search</h2>
+			
+            #tag( "Component" "label='domain-booster.config.site.limitSearchToSite.label'" "name='limitSearchToSite'" "theme='aui'" "value=limitSearchToSite" "template='onofflist.vm'")
+            <div class="description description-checkbox">
+            	$action.getText("domain-booster.config.site.limitSearchToSite.description")
+            </div>
+
+			<h2>Breadcrumb</h2>
+			
+	            #tag( "TextField" "label='domain-booster.config.site.dashboardLinkText.label'" "name='dashboardLinkText'" "value=dashboardLinkText" "theme='aui'")
+	            <div class="description description-textbox">
+	            	$action.getText("domain-booster.config.site.dashboardLinkText.description")
+	            </div>
+	        	
+	            #tag( "TextField" "label='domain-booster.config.site.dashboardLinkUrl.label'" "name='dashboardLinkUrl'" "value=dashboardLinkUrl" "theme='aui'")
+	            <div class="description description-textbox">
+	            	$action.getText("domain-booster.config.site.dashboardLinkUrl.description")
+	            </div>
+	        	
+	            #tag( "Component" "label='domain-booster.config.site.hideDashboard.label'" "name='hideDashboard'" "theme='aui'" "value=hideDashboard" "template='onofflist.vm'")
+	            <div class="description description-checkbox">
+	            	$action.getText("domain-booster.config.site.hideDashboard.description")
+	            </div>
+			
+	            #tag( "Component" "label='domain-booster.config.site.hideSpaceInBreadcrumb.label'" "name='hideSpaceInBreadcrumb'" "theme='aui'" "value=hideSpaceInBreadcrumb" "template='onofflist.vm'")
+	            <div class="description description-checkbox">
+	            	$action.getText("domain-booster.config.site.hideSpaceInBreadcrumb.description")
+	            </div>
+			
+	            #tag( "Component" "label='domain-booster.config.site.expandBreadcrumb.label'" "name='expandBreadcrumb'" "theme='aui'" "value=expandBreadcrumb" "template='onofflist.vm'")
+	            <div class="description description-checkbox">
+	            	$action.getText("domain-booster.config.site.expandBreadcrumb.description")
+	            </div>
+			
+			<h2>Proxy Settings</h2>
+			
+            #bodytag( "TextField" "label='domain-booster.config.site.proxyPort.label'" "name='proxyPort'" "value=proxyPortStr" "theme='aui'")
+                #param("shortField" "true")
+            #end
+            <div class="description description-textbox">
+            	$action.getText("domain-booster.config.site.proxyPort.description")
+            </div>
+
+
+			<div class="buttons-container">
+				<div class="buttons">
+        			<input id="confirm" class="submit button" type="submit" name="confirm" value="$action.getText('domain-booster.config.site.submit')" />
+        			&nbsp;&nbsp;
+        			<a href="config.action">Cancel</a>
+				</div>
+			</div>
+    
+        </form>
+
+
+
+		
+        <form method="POST" class="aui long-label" action="${req.contextPath}/admin/plugins/domain-booster/addsr.action">
+        	#form_xsrfToken
+        	<div class="hidden parameters">
+        		<input type="hidden" name="editHost" value="$generalUtil.htmlEncode( $action.editHost )" />
+        		<input type="hidden" name="addTextRule" value="true" />
+    		</div>
+        	
+			<h2>$action.getText("domain-booster.config.newTextRule.heading")</h2>
+			<p>$action.getText("domain-booster.config.newTextRule.description")</p>
+        	
+            #tag( "TextField" "label='domain-booster.config.site.newFindRule.label'" "name='newFindRule'" "value=newFindRule" "theme='aui'")
+            #tag( "Textarea" "label='domain-booster.config.site.newReplaceRule.label'" "name='newReplaceRule'" "rows=3" "cols=40"  "theme='aui'")
+        	
+			<div class="buttons-container">
+				<div class="buttons">
+        			<input class="submit button" type="submit" name="confirm" value="$action.getText('domain-booster.config.newTextRule.submit')" />
+				</div>
+			</div>
+        </form>
+		
+		#if($action.textReplacementRules.size() > 0)
+			<form method="POST" class="aui long-label" action="${req.contextPath}/admin/plugins/domain-booster/srdelete.action">
+	        	#form_xsrfToken
+	        	<div class="hidden parameters">
+	        		<input type="hidden" name="hostName" value="$generalUtil.htmlEncode( $action.editHost )" />
+	    		</div>
+				<table class="sites">
+					<thead>
+						<th></th>
+				    	<th>$action.getText('domain-booster.config.site.newFindRule.label')</th>
+				    	<th>$action.getText('domain-booster.config.site.newReplaceRule.label')</th>
+					</thead>
+					<tbody>
+						#set( $ruleIndex = 0 )
+						#foreach( $rule in $action.textReplacementRules )
+							<tr>
+								<td><input type="checkbox" name="index" value="$ruleIndex"></td>
+						    	<td>$generalUtil.htmlEncode( $rule.f )</td>
+						    	<td>$generalUtil.htmlEncode( $rule.r )</td>
+						    </tr>
+						    #set( $ruleIndex = $ruleIndex + 1 )
+						#end
+					</tbody>
+				</table>
+				<p><input type="submit" value="Delete selected" /></p>
+	        </form>
+		#end
+		
+		<p>&nbsp;</p><p>&nbsp;</p>
+		<!--
+		<p>
+		FIXME add link on online docs!
+		</p>
+		-->
+		
+	</body>
+</html>

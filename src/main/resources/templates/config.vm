@@ -1,0 +1,135 @@
+#requireResource("confluence.web.resources:jquery")
+#requireResource("com.bugsio.confluence.plugins.domain-booster:domain-booster-config-resources")
+
+<html>
+	<head>
+		<title>$action.getText("domain-booster.config.title")</title>
+		<content tag="selectedWebItem">domain-booster-config</content>
+		<meta name="decorator" content="atl.admin"/>
+	</head>
+	<body>
+		#requireResource("confluence.web.resources:aui-forms")
+		
+        #parse ( "/template/includes/actionmessages.vm" )
+        
+        #parse ( "/template/includes/actionerrors.vm" )
+
+        <form method="POST" class="aui long-label" name="domainBoosterGlobalSettings" action="${req.contextPath}/admin/plugins/domain-booster/doconfig.action">
+            #form_xsrfToken
+            
+            <h2>$action.getText("domain-booster.config.global.heading")</h2>
+            <p>$action.getText("domain-booster.config.global.description")</p>
+            
+            #bodytag( "TextField" "label='domain-booster.config.global.unknownHostnameRedirect.label'" "name='unknownHostnameRedirect'" "value=unknownHostnameRedirect" "theme='aui'")
+                #param("longField" "true")
+            #end
+            <div class="description description-textbox">
+            	$action.getText("domain-booster.config.global.unknownHostnameRedirect.description")
+            </div>
+            
+            #tag( "Textarea" "label='domain-booster.config.global.neverRedirectUsers.label'" "name='neverRedirectUsers'" "rows=5" "cols=40" "theme='aui'")
+            <div class="description description-textbox">
+            	$action.getText("domain-booster.config.global.neverRedirectUsers.description")
+            </div>
+            
+            #tag( "Textarea" "label='domain-booster.config.global.globalAnonForbiddenPaths.label'" "name='globalAnonForbiddenPaths'" "rows=5" "cols=40" "theme='aui'")
+            <div class="description description-textbox">
+            	$action.getText("domain-booster.config.global.globalAnonForbiddenPaths.description")
+            </div>
+            
+            
+            <h2>$action.getText("domain-booster.config.html.heading")</h2>
+            <p>$action.getText("domain-booster.config.html.description")</p>
+            <!--
+            #tag( "Textarea" "label='domain-booster.config.html.insertAtEndOfHead.label'" "name='insertAtEndOfHead'" "rows=3" "cols=50" "theme='aui'")
+            #tag( "Textarea" "label='domain-booster.config.html.insertAtBeginningOfBody.label'" "name='insertAtBeginningOfBody'" "rows=3" "cols=50" "theme='aui'")
+            -->
+            #tag( "Textarea" "label='domain-booster.config.html.insertAtEndOfBody.label'" "name='insertAtEndOfBody'" "rows=10" "cols=50" "theme='aui'")
+            
+
+			<div class="buttons-container">
+				<div class="buttons">
+        			<input class="submit button" type="submit" name="confirm" value="$action.getText('domain-booster.config.global.submit')" />
+				</div>
+			</div>
+		</form>
+		
+        <div>
+	        <form method="POST" class="aui long-label" name="domainBoosterAddSite" action="${req.contextPath}/admin/plugins/domain-booster/addsite.action">
+	        	#form_xsrfToken
+	        	
+				<h2>$action.getText("domain-booster.config.newSite.heading")</h2>
+				<p>$action.getText("domain-booster.config.site.description")</p>
+	        	
+	            #tag( "TextField" "label='domain-booster.config.site.hostName.label'" "name='hostName'" "value=hostName" "theme='aui'")
+	            <div class="description description-textbox">
+	            	$action.getText("domain-booster.config.site.hostName.description")
+	            </div>
+	        	
+	            #tag( "TextField" "label='domain-booster.config.site.defaultSpace.label'" "name='defaultSpace'" "value=defaultSpace" "theme='aui'")
+	            <div class="description description-textbox">
+	                $action.getText("domain-booster.config.site.defaultSpace.description")
+	            </div>
+	        	
+				<div class="buttons-container">
+					<div class="buttons">
+	        			<input class="submit button" type="submit" name="confirm" value="$action.getText('domain-booster.config.newSite.submit')" />
+					</div>
+				</div>
+            </form>
+        </div>
+		
+		#if($action.domainBoosterSettings.serverSettings.size() > 0)
+			<form method="POST" class="aui long-label" action="${req.contextPath}/admin/plugins/domain-booster/sitedelete.action">
+			<h2>$action.getText("domain-booster.config.sites.heading")</h2>
+				<table class="sites">
+					<thead>
+						<th></th>
+				    	<th>Host Name</th>
+				    	<th>Aliases</th>
+				    	<th>Default Space</th>
+				    	<th>Other Spaces</th>
+				    	<th></th>
+					</thead>
+					<tbody>
+						#foreach( $site in $action.domainBoosterSettings.serverSettings )
+							<tr>
+								<td><input type="checkbox" name="host" value="$generalUtil.htmlEncode( $site.hostName )"></td>
+						    	<td>$generalUtil.htmlEncode( $site.hostName )</td>
+						    	<td>$generalUtil.htmlEncode( $site.aliases )</td>
+						    	<td>$generalUtil.htmlEncode( $site.defaultSpace )</td>
+						    	<td>$generalUtil.htmlEncode( $site.spaces )</td>
+						    	<td>
+						    		<a href="siteedit.action?editHost=$generalUtil.htmlEncode( $site.hostName )">Edit</a>
+						    	</td>
+						    </tr>
+						#end
+					</tbody>
+				</table>
+				<p><input type="submit" value="Delete selected" /></p>
+	        </form>
+		#end
+		
+        
+        
+        
+        <h2>$action.getText("domain-booster.config.exportimport.heading")</h2>
+        <p>$action.getText("domain-booster.config.exportimport.description")</p>
+        <p>Export: <a href="${req.contextPath}/admin/downloadDomainBoosterSettings">download settings</a></p>
+		<form method="POST" enctype="multipart/form-data" 
+				action="${req.contextPath}/admin/plugins/domain-booster/restore.action">
+			#form_xsrfToken
+			<label for="file">Import file:</label>
+			<input type="file" name="file" id="file"><br>
+			<input type="submit" name="submit" value="Restore">
+        </form>
+        
+		<p>&nbsp;</p><p>&nbsp;</p>
+		<!--
+		<p>
+		FIXME add link on online docs!
+		</p>
+		-->
+		
+	</body>
+</html>

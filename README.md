@@ -1,4 +1,6 @@
-confluence-domain-booster-plugin
-================================
+Domain Booster for Confluence
+=============================
 
-Confluence Domain Booster Add-on
+For packaging run:
+
+    atlas-package

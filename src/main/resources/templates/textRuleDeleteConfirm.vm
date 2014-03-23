@@ -1,0 +1,38 @@
+#requireResource("confluence.web.resources:jquery")
+#requireResource("com.bugsio.confluence.plugins.domain-booster:domain-booster-config-resources")
+
+<html>
+	<head>
+		<title>$action.getText("domain-booster.siteTextRuleDeleteConfirm.title")</title>
+	</head>
+	<body>
+        #parse ( "/template/includes/actionmessages.vm" )
+        
+        #parse ( "/template/includes/actionerrors.vm" )
+
+		<h2>Confirm text modification rule deletion</h2>
+		
+		<p>Do you really want to delete the following page text modification rules?</p>
+		
+        <form method="POST" name="domainBoosterDelete" action="${req.contextPath}/admin/plugins/domain-booster/srdelete2.action">
+        	#form_xsrfToken
+        	<div class="hidden parameters">
+        		<input type="hidden" name="hostName" value="$generalUtil.htmlEncode( $action.hostName )" />
+    		</div>
+
+			<ul>
+				#foreach( $index in $action.index )
+					<input type="hidden" name="index" value="$index" />
+					<li>$generalUtil.htmlEncode( $action.getFindText($index) )</li>
+				#end
+			</ul>
+			
+                	
+        	<input type="submit" name="delete" value="Delete" />
+    		&nbsp;&nbsp;
+    		<a href="config.action">Cancel</a>
+        </form>
+		
+        #parse ( "/admin/admin-breadcrumbs.vm" )
+	</body>
+</html>

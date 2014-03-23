@@ -1,0 +1,96 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+		<param name="configure.url">/admin/plugins/domain-booster/config.action</param>
+    </plugin-info>
+	
+    <servlet-filter name="DomainBoosterFilter"
+                    key="multiDomain-filter" class="com.bugsio.confluence.plugins.DomainBoosterFilter"
+                    location="before-dispatch" weight="2">
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </servlet-filter>
+
+   	<component key="logConfig" name="The logging configuration for this plugin"
+		class="com.bugsio.confluence.plugins.LogConfigurationComponent">
+	</component>
+    	
+    <xwork name="Domain Booster Actions" key="domain-booster.plugin.actions">
+        <package name="Domain Booster Admin" extends="default" namespace="/admin/plugins/domain-booster">
+            <default-interceptor-ref name="defaultStack"/>
+            <action name="config" class="com.bugsio.confluence.plugins.actions.DomainBoosterGlobalConfigAction" method="doDefault">
+                <result name="success" type="velocity">/templates/config.vm</result>
+            </action>
+            <action name="doconfig" class="com.bugsio.confluence.plugins.actions.DomainBoosterGlobalConfigAction">
+                <param name="RequireSecurityToken">true</param>
+                <interceptor-ref name="validatingStack"/>
+                <result name="input" type="velocity">/templates/config.vm</result>
+                <result name="success" type="velocity">/templates/config.vm</result>
+            </action>
+            <action name="addsite" class="com.bugsio.confluence.plugins.actions.DomainBoosterSiteConfigAction" method="addSite">
+                <param name="RequireSecurityToken">true</param>
+                <interceptor-ref name="validatingStack"/>
+                <result name="input" type="velocity">/templates/site.vm</result>
+                <result name="success" type="redirect">config.action</result> 
+            </action>
+            <action name="siteedit" class="com.bugsio.confluence.plugins.actions.DomainBoosterSiteConfigAction" method="editSite">
+                <result name="input" type="velocity">/templates/site.vm</result>
+                <result name="not-found" type="redirect">config.action</result> 
+            </action>
+            <action name="updatesite" class="com.bugsio.confluence.plugins.actions.DomainBoosterSiteConfigAction" method="execute">
+                <param name="RequireSecurityToken">true</param>
+                <interceptor-ref name="validatingStack"/>
+                <result name="input" type="velocity">/templates/site.vm</result>
+                <result name="success" type="redirect">config.action</result> 
+            </action>
+            <action name="addsr" class="com.bugsio.confluence.plugins.actions.DomainBoosterSiteConfigAction" method="newFindReplaceRule">
+                <param name="RequireSecurityToken">true</param>
+                <interceptor-ref name="validatingStack"/>
+                <result name="input" type="velocity">/templates/site.vm</result>
+                <result name="success" type="velocity">/templates/site.vm</result> 
+            </action>
+            <action name="sitedelete" class="com.bugsio.confluence.plugins.actions.DomainBoosterSiteDeleteAction" method="confirm">
+                <result name="confirm" type="velocity">/templates/siteDeleteConfirm.vm</result>
+            </action>
+            <action name="sitedelete2" class="com.bugsio.confluence.plugins.actions.DomainBoosterSiteDeleteAction" method="execute">
+                <param name="RequireSecurityToken">true</param>
+                <interceptor-ref name="validatingStack"/>
+                <result name="success" type="redirect">config.action</result> 
+            </action>
+            <action name="srdelete" class="com.bugsio.confluence.plugins.actions.DomainBoosterSiteTextRuleDeleteAction" method="confirm">
+                <result name="confirm" type="velocity">/templates/textRuleDeleteConfirm.vm</result>
+            </action>
+            <action name="srdelete2" class="com.bugsio.confluence.plugins.actions.DomainBoosterSiteTextRuleDeleteAction" method="execute">
+                <param name="RequireSecurityToken">true</param>
+                <interceptor-ref name="validatingStack"/>
+                <result name="success" type="redirect">config.action</result> 
+            </action>
+			<action name="restore" class="com.bugsio.confluence.plugins.actions.DomainBoosterSettingsRestoreAction" method="doDefault">
+                <param name="RequireSecurityToken">true</param>
+                <interceptor-ref name="validatingStack"/>
+                <result name="success" type="redirect">config.action</result> 
+                <result name="error" type="redirect">config.action</result> 
+			</action>
+        </package>
+    </xwork>
+    
+    <web-item key="domain-booster-config" name="Domain Booster Config Menu Item" section="system.admin/configuration" weight="2000">
+        <label key="domain-booster.config.webitem.label"/>
+        <link>/admin/plugins/domain-booster/config.action</link>
+    </web-item>
+    
+    <web-resource key="domain-booster-config-resources" name="Domain Booster configuration screen resources">
+        <resource type="download" name="domain-booster.css" location="templates/resources/domain-booster.css"/>
+    </web-resource>
+    
+    <web-resource key="domain-booster-site-resources" name="Domain Booster page resources">
+        <resource type="download" name="page.js" location="templates/resources/page.js"/>
+    </web-resource>
+    
+    <resource name="i18n" type="i18n" location="com.bugsio.confluence.plugins.text"/>
+    
+	<component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager"/>
+	
+</atlassian-plugin>

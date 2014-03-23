@@ -1,0 +1,37 @@
+#requireResource("confluence.web.resources:jquery")
+#requireResource("com.bugsio.confluence.plugins.domain-booster:domain-booster-config-resources")
+
+<html>
+	<head>
+		<title>$action.getText("domain-booster.siteDeleteConfirm.title")</title>
+	</head>
+	<body>
+        #parse ( "/template/includes/actionmessages.vm" )
+        
+        #parse ( "/template/includes/actionerrors.vm" )
+
+		<h2>Confirm site deletion</h2>
+		
+		<p>Do you really want to delete the following sites from Domain Booster?</p>
+		
+		<ul>
+			#foreach( $site in $action.host )
+				<li>$generalUtil.htmlEncode( $site )</li>
+			#end
+		</ul>
+		
+        <form method="POST" name="domainBoosterDelete" action="${req.contextPath}/admin/plugins/domain-booster/sitedelete2.action">
+        	#form_xsrfToken
+
+			#foreach( $site in $action.host )
+				<input type="hidden" name="host" value="$generalUtil.htmlEncode( $site )" />
+			#end
+                	
+        	<input type="submit" name="delete" value="Delete" />
+    		&nbsp;&nbsp;
+    		<a href="config.action">Cancel</a>
+        </form>
+		
+        #parse ( "/admin/admin-breadcrumbs.vm" )
+	</body>
+</html>

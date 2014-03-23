@@ -1,0 +1,13 @@
+.*
+!.gitignore
+*.log
+*~
+*.war
+*.zip
+out/
+target/
+target*
+build/
+backup/
+log.txt
+
