@@ -128,7 +128,7 @@ public class DomainBoosterFilter implements Filter {
 			// prevent redirection to the same host
 			try {
 				URI uri = new URI(unknownHostRedirect);
-				if(uri.getHost().equals(requestedServer)) {
+				if(uri.getHost() != null && uri.getHost().equals(requestedServer)) {
 					unknownHostRedirect = null;
 					//log.debug("Preventing redirection for unknown host");
 				}
